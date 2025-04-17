@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // -----------------
+    // Run Current File:
+    // -----------------
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Current File",
+      "runtimeExecutable": "node",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "program": "${fileDirname}/${fileBasename}",
+      "smartStep": true,
+      "restart": true, // Try to reconnect to a program if we lose connection. If set to `true`, we'll try once every second, forever.
+      "outputCapture": "std", // This is to be able to also capture logger outputs
+      "sourceMaps": true,
+      "env": { "ENV_FILE": "${workspaceFolder}/envs/.env.development" },
+      "console": "integratedTerminal"
+    },
+    // ------------
+    // Debug React:
+    // ------------
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug React",
+      "url": "http://localhost:3000",
+      "smartStep": true,
+      "outputCapture": "std", // This is to be able to also capture logger outputs
+      "sourceMaps": true,
+      "env": { "ENV_FILE": "${workspaceFolder}/envs/.env.development" }
+    },
+  ]
+}
