@@ -55,5 +55,5 @@ To run all services inside containers using Docker:
 
 1. Clone the project:
    ```bash
-   git clone https://your-repository-url
-   cd project-directory
+   git clone [https://your-repository-url](https://github.com/PROL3/ShopFrontendProject/tree/main)
+   cd ShopFrontendProject
