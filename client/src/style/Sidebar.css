@@ -1,0 +1,96 @@
+/* Sidebar.css */
+
+.sidebar {
+  position: fixed; /* כך יהיה ממוקם בצד */
+  top: 0;
+  left: 0;
+  height: 100vh; /* יכסה את כל הגובה של המסך */
+  width: 250px; /* גודל ברירת מחדל של הסיידבר */
+  background-color: #f4f4f4;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease-in-out;
+  z-index: 1000; /* ודא שהוא מעל כל האלמנטים האחרים */
+}
+
+.sidebar.open {
+  width: 250px; /* גודל כאשר הסיידבר פתוח */
+}
+
+.sidebar.closed {
+  width: 0; /* גודל כאשר הסיידבר סגור */
+}
+
+.toggle-button {
+  position: absolute;
+  top: 50px;
+  right: -30px;
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1100;
+}
+
+.toggle-button:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #333;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.open {
+  transform: rotate(90deg);
+}
+
+.toggle-icon.closed {
+  transform: rotate(270deg);
+}
+
+
+.sidebar-links {
+  margin-top: 20px;
+  padding-left: 20px;
+}
+.basket-section {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #ccc;
+}
+
+.basket-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.basket-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.basket-item img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.basket-item button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 12px;
+}
