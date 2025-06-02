@@ -19,86 +19,104 @@ interface Product {
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  // TODO - why do you need here local storage ? since you are save the basket in Redis DB ?
   const [basket, setBasket, deleteBasket] = useLocalStorage<Product[]>('basket', []);
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
 
   useEffect(() => {
-    axios.get<Product[]>('https://fakestoreapi.com/products')
-      .then(res => setProducts(res.data))
-      .catch(err => console.error(err));
+    // TODO - better to move all the API requests under api folder.
+    // take a look on this PR - https://github.com/danbiton/assignment-ort/pull/2/files
+    axios
+      .get<Product[]>('https://fakestoreapi.com/products')
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   const handleQuantityChange = (productId: number, newQuantity: number) => {
-    setQuantities(prevQuantities => ({
+    setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [productId]: newQuantity
+      [productId]: newQuantity,
     }));
   };
 
   const addToBasket = (product: Product) => {
     const quantity = quantities[product.id] || 1; // ברירת מחדל היא 1 אם לא בחרו כמות
-    if (!basket.find(item => item.id === product.id)) {
+    if (!basket.find((item) => item.id === product.id)) {
       const newProduct = { ...product, quantity };
-      axios.post('http://localhost:8080/basket', newProduct)
+      // TODO - better to move all the API requests under api folder.
+      // take a look on this PR - https://github.com/danbiton/assignment-ort/pull/2/files
+      axios
+        .post('http://localhost:8080/basket', newProduct)
         .then(() => {
           setBasket([...basket, newProduct]);
           console.log('נוסף לשרת בהצלחה');
         })
-        .catch(err => console.error('שגיאה בשליחת המוצר לשרת', err));
+        .catch((err) => console.error('שגיאה בשליחת המוצר לשרת', err));
     } else {
-      const updatedBasket = basket.map(item => 
+      const updatedBasket = basket.map((item) =>
         item.id === product.id
           ? { ...item, quantity: item.quantity + quantity } // עדכון כמות אם המוצר כבר קיים
-          : item
+          : item,
       );
-      axios.put(`http://localhost:8080/basket/${product.id}`, updatedBasket)
+      // TODO - better to move all the API requests under api folder.
+      // take a look on this PR - https://github.com/danbiton/assignment-ort/pull/2/files
+      axios
+        .put(`http://localhost:8080/basket/${product.id}`, updatedBasket)
         .then(() => {
           setBasket(updatedBasket);
           console.log('הכמות עודכנה בהצלחה');
         })
-        .catch(err => console.error('שגיאה בעדכון המוצר בשרת', err));
+        .catch((err) => console.error('שגיאה בעדכון המוצר בשרת', err));
     }
   };
 
   const removeFromBasket = (productId: number) => {
-    setBasket(basket.filter(product => product.id !== productId));
-
-    axios.delete(`http://localhost:8080/basket/${productId}`)
+    setBasket(basket.filter((product) => product.id !== productId));
+    // TODO - better to move all the API requests under api folder.
+    // take a look on this PR - https://github.com/danbiton/assignment-ort/pull/2/files
+    axios
+      .delete(`http://localhost:8080/basket/${productId}`)
+      // TODO - avoid logs without meanful..
       .then(() => console.log('נמחק מהשרת בהצלחה'))
-      .catch(err => console.error('שגיאה בשליחת המוצר לשרת', err));
+      .catch((err) => console.error('שגיאה בשליחת המוצר לשרת', err));
   };
 
   return (
-    <div className="homepage-container">
-      <h1 className="title">כל המוצרים</h1>
-      <div className="products-grid">
-        {products.map(product => {
-          const inBasket = basket.some(item => item.id === product.id);
+    <div className='homepage-container'>
+      <h1 className='title'>כל המוצרים</h1>
+      <div className='products-grid'>
+        {/* TODO - bad practice ... move the second return to component */}
+        {products.map((product) => {
+          const inBasket = basket.some((item) => item.id === product.id);
           const quantity = quantities[product.id] || 1;
 
           return (
-            <div className="product-card" key={product.id}>
-              <img src={product.image} alt={product.title} className="product-image" />
-              <h3 className="product-title">{product.title}</h3>
-              <p className="product-price">${product.price}</p>
-              <p className="product-rating">⭐ {product.rating.rate} ({product.rating.count} דירוגים)</p>
+            <div className='product-card' key={product.id}>
+              <img src={product.image} alt={product.title} className='product-image' />
+              <h3 className='product-title'>{product.title}</h3>
+              <p className='product-price'>${product.price}</p>
+              <p className='product-rating'>
+                ⭐ {product.rating.rate} ({product.rating.count} דירוגים)
+              </p>
               {!inBasket && (
                 <div>
                   <input
-                    type="number"
+                    type='number'
                     value={quantity}
-                    min="1"
+                    min='1'
                     onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value))}
-                    className="quantity-input border border-gray-300 rounded-md p-2"
+                    className='quantity-input border border-gray-300 rounded-md p-2'
                   />
-                  <button className="add-button" onClick={() => addToBasket(product)}>
+                  <button className='add-button' onClick={() => addToBasket(product)}>
                     הוסף לסל
                   </button>
                 </div>
               )}
               {inBasket && (
-                <button className="remove-button bg-red-500 hover:bg-red-600 p-20 text-white px-3 py-1 rounded-md text-sm transition-all duration-200 flex items-center gap-1"
-                  onClick={() => removeFromBasket(product.id)}>
+                <button
+                  className='remove-button bg-red-500 hover:bg-red-600 p-20 text-white px-3 py-1 rounded-md text-sm transition-all duration-200 flex items-center gap-1'
+                  onClick={() => removeFromBasket(product.id)}
+                >
                   הסר מהסל
                 </button>
               )}
